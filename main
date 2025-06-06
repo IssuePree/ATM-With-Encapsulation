@@ -1,0 +1,104 @@
+import java.util.Scanner;
+
+class ATM {
+    private double balance;
+    private int pin;
+
+    public ATM(int pin) {
+        this.pin = pin;
+        this.balance = 1000.0; // Initial balance
+    }
+
+    public boolean verifyPin(int inputPin) {
+        return this.pin == inputPin;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("❌ Invalid amount. Enter a positive value.");
+        } else {
+            balance += amount;
+            System.out.println("✅ Amount deposited: ₹" + amount);
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("❌ Invalid amount. Enter a positive value.");
+        } else if (amount > balance) {
+            System.out.println("❌ Insufficient balance.");
+        } else {
+            balance -= amount;
+            System.out.println("✅ Amount withdrawn: ₹" + amount);
+        }
+    }
+}
+
+public class ATMProject {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ATM myAtm = new ATM(1234); // Set default PIN
+
+        System.out.println("===== Welcome to Java ATM =====");
+
+        int attempts = 0;
+        boolean isAuthenticated = false;
+
+        while (attempts < 3) {
+            System.out.print("Enter your 4-digit PIN: ");
+            int enteredPin = sc.nextInt();
+
+            if (myAtm.verifyPin(enteredPin)) {
+                isAuthenticated = true;
+                break;
+            } else {
+                System.out.println("❌ Incorrect PIN.");
+                attempts++;
+            }
+        }
+
+        if (!isAuthenticated) {
+            System.out.println("🔒 Too many failed attempts. Account locked.");
+            return;
+        }
+
+        int choice;
+        do {
+            System.out.println("\n===== ATM MENU =====");
+            System.out.println("1. Check Balance");
+            System.out.println("2. Deposit Money");
+            System.out.println("3. Withdraw Money");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("💰 Current Balance: ₹" + myAtm.getBalance());
+                    break;
+                case 2:
+                    System.out.print("Enter amount to deposit: ₹");
+                    double depositAmount = sc.nextDouble();
+                    myAtm.deposit(depositAmount);
+                    break;
+                case 3:
+                    System.out.print("Enter amount to withdraw: ₹");
+                    double withdrawAmount = sc.nextDouble();
+                    myAtm.withdraw(withdrawAmount);
+                    break;
+                case 4:
+                    System.out.println("👋 Thank you for using Java ATM.");
+                    break;
+                default:
+                    System.out.println("❗ Invalid choice. Try again.");
+            }
+
+        } while (choice != 4);
+
+        sc.close();
+    }
+}
